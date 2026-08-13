@@ -43,7 +43,9 @@ This repository consolidates all core domain entities, Data Transfer Objects (DT
         <version>1.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
+
 Gradle Consumers (build.gradle)
+
 Groovy
 repositories {
     mavenCentral()
@@ -53,6 +55,7 @@ repositories {
 dependencies {
     implementation 'com.github.my-gym-app:mga-all-models-jars:1.0.0-SNAPSHOT'
 }
+
 ⚙️ Local Build & Installation
 Bash
 mvn clean compile
