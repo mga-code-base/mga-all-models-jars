@@ -21,7 +21,7 @@ public record Trainer(
         String trainerId,
         String name,
         String username,
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) String password,
+        String password,
         Long mobileNumber,
         String emailAddress,
         Boolean isActive,

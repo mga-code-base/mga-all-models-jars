@@ -19,7 +19,7 @@ public record Admin(
         String adminId,
         String name,
         String username,
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) String password,
+        String password,
         String mobileNumber,
         String emailAddress,
         Boolean isActive,
@@ -52,6 +52,10 @@ public record Admin(
 
     public Admin withPassword(String password) {
         return new Admin(_id, adminId, name, username, password, mobileNumber, emailAddress, isActive, branchId);
+    }
+
+    public Admin withoutPassword() {
+        return withPassword(null);
     }
 
     public Admin withIsActive(Boolean isActive) {

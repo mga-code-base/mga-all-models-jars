@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Document(collection = "members")
 public record Member(
@@ -26,7 +25,7 @@ public record Member(
         Integer localityPincode,
         String photo,
         String username,
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) String password,
+        String password,
         String trainerAssigned,
         String addedByAdminId,
         Boolean isActive,
