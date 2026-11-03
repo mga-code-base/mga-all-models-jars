@@ -1,15 +1,19 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class BranchWrapper {
+public record BranchWrapper(List<Branch> allBranches) implements Serializable {
 
-	private List<Branch> allBranches;
-	
-	public BranchWrapper(List<Branch> allBranches) {
-		this.allBranches = allBranches;
-	}
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	public List<Branch> getAllBranches() { return allBranches;	}
-	public void setAllBranches(List<Branch> allBranches) { this.allBranches = allBranches;	}
+    public BranchWrapper {
+        allBranches = allBranches != null ? allBranches : List.of();
+    }
+
+    public static BranchWrapper empty() {
+        return new BranchWrapper(List.of());
+    }
 }

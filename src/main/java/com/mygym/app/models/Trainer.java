@@ -1,78 +1,64 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "trainers")
-public class Trainer {
-	
-	@Id
-	@MongoId(targetType = FieldType.OBJECT_ID)
-	private ObjectId _id;
+public record Trainer(
+        @JsonIgnore @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
+        String trainerId,
+        String name,
+        String username,
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) String password,
+        Long mobileNumber,
+        String emailAddress,
+        Boolean isActive,
+        String branchId,
+        @JsonProperty("activeClients") List<String> activeClientIds) implements Serializable {
 
-    private String trainerId;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private String name;
-
-    private String username;
-
-    private String password;
-
-    private Long mobileNumber;
-
-    private String emailAddress;
-
-    private Boolean isActive = false;
-    
-    private String branchId;
-
-    private List<String> activeClientIds;
-
-    public Trainer() {}
-    public Trainer(String invalidId) {
-    	this.trainerId = invalidId;
+    @PersistenceCreator
+    @JsonCreator
+    public Trainer {
+        isActive = isActive != null ? isActive : Boolean.FALSE;
     }
-    public Trainer(String trainerId, String name, String username, String password, Long mobileNumber, String emailAddress, Boolean isActive, String branchId, List<String> activeClientIds) {
-        this.trainerId = trainerId;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.mobileNumber = mobileNumber;
-        this.emailAddress = emailAddress;
-        this.isActive = isActive;
-        this.activeClientIds = activeClientIds;
-        this.setBranchId(branchId);
+
+    public static Trainer notFound() {
+        return new Trainer(null, "-1", null, null, null, null, null, null, null, null);
     }
-    
-    public String getTrainerId() { return trainerId; }
-    public void setTrainerId(String trainerId) { this.trainerId = trainerId; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Trainer withTrainerId(String trainerId) {
+        return new Trainer(_id, trainerId, name, username, password, mobileNumber, emailAddress, isActive, branchId, activeClientIds);
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public Trainer withPassword(String password) {
+        return new Trainer(_id, trainerId, name, username, password, mobileNumber, emailAddress, isActive, branchId, activeClientIds);
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public Trainer withoutPassword() {
+        return withPassword(null);
+    }
 
-    public Long getMobileNumber() { return mobileNumber; }
-    public void setMobileNumber(Long mobileNumber) { this.mobileNumber = mobileNumber; }
+    public Trainer withIsActive(Boolean isActive) {
+        return new Trainer(_id, trainerId, name, username, password, mobileNumber, emailAddress, isActive, branchId, activeClientIds);
+    }
 
-    public String getEmailAddress() { return emailAddress; }
-    public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress; }
-
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
-
-    public String getBranchId() { return branchId;}
-	public void setBranchId(String branchId) { this.branchId = branchId; }
-
-	public List<String> getActiveClients() { return activeClientIds; }
-    public void setActiveClients(List<String> activeClientIds) { this.activeClientIds = activeClientIds; }
+    public Trainer withProfileFrom(Trainer source, String password) {
+        return new Trainer(_id, trainerId, source.name(), source.username(), password, source.mobileNumber(),
+                source.emailAddress(), source.isActive(), branchId, source.activeClientIds());
+    }
 }

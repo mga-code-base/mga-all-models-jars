@@ -1,41 +1,33 @@
 package com.mygym.app.models;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.io.Serial;
+import java.io.Serializable;
 
-@Document(collection = "equipments")
-public class Equipment {
+import org.springframework.data.annotation.PersistenceCreator;
 
-    private Integer equipmentId;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
-    private String name;
-    
-    private String targetMuscle;
+public record Equipment(
+        Integer equipmentId,
+        String name,
+        String targetMuscle,
+        Boolean isInWorkingCondition,
+        Failure failure) implements Serializable {
 
-    private Boolean isInWorkingCondition = true;
-    
-    private Failure failure;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    public Equipment() {}
-    public Equipment(Integer equipmentId, String name, String targetMuscle, Boolean isInWorkingCondition, Failure failure) {
-        this.equipmentId = equipmentId;
-    	this.name = name;
-    	this.targetMuscle = targetMuscle;
-        this.isInWorkingCondition = isInWorkingCondition;
-        this.failure = failure;
+    @PersistenceCreator
+    @JsonCreator
+    public Equipment {
+        isInWorkingCondition = isInWorkingCondition != null ? isInWorkingCondition : Boolean.TRUE;
     }
 
-    public Integer getEquipmentId() { return equipmentId; }
-    public void setEquipmentId(Integer id) { this.equipmentId = id; }
+    public Equipment withEquipmentId(Integer equipmentId) {
+        return new Equipment(equipmentId, name, targetMuscle, isInWorkingCondition, failure);
+    }
 
-    public String getTargetMuscle() { return targetMuscle; }
-	public void setTargetMuscle(String targetMuscle) { this.targetMuscle = targetMuscle;}
-	
-	public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-	public Boolean getIsInWorkingCondition() { return isInWorkingCondition; }
-	public void setIsInWorkingCondition(Boolean isInWorkingCondition) {	this.isInWorkingCondition = isInWorkingCondition; }
-
-	public Failure getFailure() { return failure; }
-	public void setFailure(Failure failure) { this.failure = failure; }
+    public Equipment withCondition(Boolean isInWorkingCondition, Failure failure) {
+        return new Equipment(equipmentId, name, targetMuscle, isInWorkingCondition, failure);
+    }
 }

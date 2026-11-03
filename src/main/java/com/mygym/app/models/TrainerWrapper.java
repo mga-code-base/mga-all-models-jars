@@ -1,14 +1,19 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class TrainerWrapper {
+public record TrainerWrapper(List<Trainer> allTrainers) implements Serializable {
 
-	private List<Trainer> allTrainers;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	public TrainerWrapper() {}
-	public TrainerWrapper(List<Trainer> allTrainers) {this.allTrainers = allTrainers;}
+    public TrainerWrapper {
+        allTrainers = allTrainers != null ? allTrainers : List.of();
+    }
 
-	public List<Trainer> getAllTrainers() {	return allTrainers;	}
-	public void setAllTrainers(List<Trainer> allTrainers) {	this.allTrainers = allTrainers;	}
+    public static TrainerWrapper empty() {
+        return new TrainerWrapper(List.of());
+    }
 }

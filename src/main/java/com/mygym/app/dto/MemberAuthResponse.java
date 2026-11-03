@@ -6,4 +6,4 @@ public record MemberAuthResponse(boolean success,
 		String memberId, 
 		String trainerId, 
 		Boolean isActive, 
-		Boolean isFacialRegCompleted) {}
+		Boolean isFacialRegCompleted) implements java.io.Serializable {}

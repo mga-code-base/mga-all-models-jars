@@ -1,3 +1,3 @@
 package com.mygym.app.dto;
 
-public record LoginRequest(String username, String password) {}
+public record LoginRequest(String username, String password) implements java.io.Serializable {}

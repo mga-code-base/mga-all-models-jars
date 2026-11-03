@@ -1,3 +1,3 @@
 package com.mygym.app.dto;
 
-public record AuthResponse(boolean isActive, String message, String token, String role, String personId, String branchId) {}
+public record AuthResponse(boolean isActive, String message, String token, String role, String personId, String branchId) implements java.io.Serializable {}

@@ -1,75 +1,61 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 @Document(collection = "branches")
-public class Branch {
-	
-	@Id
-	@MongoId(targetType = FieldType.OBJECT_ID)
-	private ObjectId _id;
+public record Branch(
+        @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
+        String branchId,
+        String name,
+        List<String> adminIds,
+        Integer pincode,
+        String address,
+        String city,
+        List<Equipment> equipments,
+        Boolean isActive) implements Serializable {
 
-    private String branchId;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private String name;
-
-    private List<String> adminIds;
-
-    private Integer pincode;
-    
-    private String address;
-    
-    private String city;
-    
-    private List<Equipment> equipments;
-    
-    private Boolean isActive = false;
-
-    public Branch() {}
-    public Branch(String branchId, String name, List<String> adminIds, Integer pincode, String address, String city, List<Equipment> equipments, Boolean isActive) {
-        this.branchId = branchId;
-        this.name = name;
-        this.adminIds = adminIds;
-        this.pincode = pincode;
-        this.address = address;
-        this.city = city;
-        this.equipments = equipments;
-        this.isActive = isActive;
+    @PersistenceCreator
+    @JsonCreator
+    public Branch {
+        isActive = isActive != null ? isActive : Boolean.FALSE;
     }
-    public Branch(String invalidBranchId) {
-    	this.branchId = invalidBranchId;
-	}
 
-	public ObjectId get_id() { return _id;	}
-	public void set_id(ObjectId _id) { this._id = _id;	}
+    public static Branch notFound() {
+        return new Branch(null, "-1", null, null, null, null, null, null, null);
+    }
 
-    public String getBranchId() { return branchId; }
-    public void setBranchId(String branchId) { this.branchId = branchId; }
+    public Branch withBranchId(String branchId) {
+        return new Branch(_id, branchId, name, adminIds, pincode, address, city, equipments, isActive);
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Branch withAdminIds(List<String> adminIds) {
+        return new Branch(_id, branchId, name, adminIds, pincode, address, city, equipments, isActive);
+    }
 
-    public List<String> getAdminIds() { return adminIds; }
-    public void setAdminIds(List<String> adminIds) { this.adminIds = adminIds; }
+    public Branch withEquipments(List<Equipment> equipments) {
+        return new Branch(_id, branchId, name, adminIds, pincode, address, city, equipments, isActive);
+    }
 
-    public Integer getPincode() { return pincode; }
-    public void setPincode(Integer pincode) {this.pincode = pincode; }
-    
-    public String getAddress() { return address; }
-	public void setAddress(String address) { this.address = address;}
+    public Branch withIsActive(Boolean isActive) {
+        return new Branch(_id, branchId, name, adminIds, pincode, address, city, equipments, isActive);
+    }
 
-	public String getCity() { return city; }
-	public void setCity(String city) { this.city = city; }
-
-	public List<Equipment> getEquipments() { return equipments; }
-	public void setEquipments(List<Equipment> allEquipments) { this.equipments = allEquipments; }
-	
-	public Boolean getIsActive() { return isActive;	}
-	public void setIsActive(Boolean isActive) {	this.isActive = isActive;	}
+    public Branch withDetailsFrom(Branch source) {
+        return new Branch(_id, branchId, source.name(), source.adminIds(), source.pincode(), source.address(),
+                source.city(), source.equipments(), source.isActive());
+    }
 }

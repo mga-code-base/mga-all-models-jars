@@ -1,5 +1,8 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,72 +10,35 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "grievances")
-public class Grievance {
+public record Grievance(
+        @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
+        String grievanceId,
+        String branchId,
+        String memberId,
+        String title,
+        String date,
+        String issueType,
+        String description,
+        String resolution,
+        String closureDate) implements Serializable {
 
-	@Id
-	@MongoId(targetType = FieldType.OBJECT_ID)
-	private ObjectId _id;
-	
-    private String grievanceId;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private String branchId;
-    
-    private String memberId;
-
-    private String date;
-    
-    private String title;
-
-    private String issueType;
-
-    private String description;
-
-    private String resolution;
-
-    private String closureDate;
-
-    public Grievance() {}
-
-    public Grievance(ObjectId _id, String grievanceId, String branchId, String memberId, String title, String date, String issueType, String description, String resolution, String closureDate) {
-    	this._id = _id;
-    	this.grievanceId = grievanceId;
-        this.branchId = branchId;
-        this.memberId = memberId;
-        this.title = title;
-        this.date = date;
-        this.issueType = issueType;
-        this.description = description;
-        this.resolution = resolution;
-        this.closureDate = closureDate;
+    public static Grievance notFound() {
+        return new Grievance(null, "-1", null, null, null, null, null, null, null, null);
     }
 
-    public ObjectId get_id() { return _id; }
-	public void set_id(ObjectId _id) { this._id = _id;	}
-    
-    public String getGrievanceId() { return grievanceId; }
-    public void setGrievanceId(String grievanceId) { this.grievanceId = grievanceId; }
+    public Grievance withGrievanceId(String grievanceId) {
+        return new Grievance(_id, grievanceId, branchId, memberId, title, date, issueType, description, resolution, closureDate);
+    }
 
-    public String getBranchId() { return branchId; }
-    public void setBranchId(String branchId) { this.branchId = branchId; }
+    public Grievance withResolution(String resolution, String closureDate) {
+        return new Grievance(_id, grievanceId, branchId, memberId, title, date, issueType, description, resolution, closureDate);
+    }
 
-    public String getMemberId() { return memberId;	}
-	public void setMemberId(String memberId) { this.memberId = memberId; }
-
-	public String getTitle() { return title; }
-	public void setTitle(String title) { this.title = title;}
-
-	public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
-
-    public String getIssueType() { return issueType; }
-    public void setIssueType(String issueType) { this.issueType = issueType; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getResolution() { return resolution; }
-    public void setResolution(String resolution) { this.resolution = resolution; }
-
-    public String getClosureDate() { return closureDate; }
-    public void setClosureDate(String closureDate) { this.closureDate = closureDate; }
+    public Grievance withDetailsFrom(Grievance source) {
+        return new Grievance(_id, grievanceId, source.branchId(), source.memberId(), source.title(), source.date(),
+                source.issueType(), source.description(), source.resolution(), source.closureDate());
+    }
 }

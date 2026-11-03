@@ -1,14 +1,19 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class AdminWrapper {
-	
-	private List<Admin> allAdmins;
-	
-	public AdminWrapper(List<Admin> allAdmins) { this.allAdmins = allAdmins; }
+public record AdminWrapper(List<Admin> allAdmins) implements Serializable {
 
-	public List<Admin> getAllAdmins() { return allAdmins; }
-	public void setAllAdmins(List<Admin> allAdmins) { this.allAdmins = allAdmins; }
+    @Serial
+    private static final long serialVersionUID = 1L;
 
+    public AdminWrapper {
+        allAdmins = allAdmins != null ? allAdmins : List.of();
+    }
+
+    public static AdminWrapper empty() {
+        return new AdminWrapper(List.of());
+    }
 }

@@ -1,13 +1,19 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class TargetMuscleWrapper {
+public record TargetMuscleWrapper(List<String> allExcercises) implements Serializable {
 
-	private List<String> allExcercises;
-	
-	public TargetMuscleWrapper(List<String> allExcercises) {this.allExcercises = allExcercises;	}
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	public List<String> getAllExcercises() {return allExcercises;}
-	public void setAllExcercises(List<String> allExcercises) {this.allExcercises = allExcercises;}
+    public TargetMuscleWrapper {
+        allExcercises = allExcercises != null ? allExcercises : List.of();
+    }
+
+    public static TargetMuscleWrapper empty() {
+        return new TargetMuscleWrapper(List.of());
+    }
 }

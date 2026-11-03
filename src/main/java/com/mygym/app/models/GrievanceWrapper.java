@@ -1,17 +1,19 @@
 package com.mygym.app.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class GrievanceWrapper {
-	
-	private List<Grievance> allGrievances;
-	
-	public GrievanceWrapper() {	}
+public record GrievanceWrapper(List<Grievance> allGrievances) implements Serializable {
 
-	public GrievanceWrapper(List<Grievance> allGrievances) {this.allGrievances = allGrievances;	}
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	public List<Grievance> getAllGrievances() {	return allGrievances;}
-	public void setAllGrievances(List<Grievance> allGrievances) {this.allGrievances = allGrievances;}
-	
-	
+    public GrievanceWrapper {
+        allGrievances = allGrievances != null ? allGrievances : List.of();
+    }
+
+    public static GrievanceWrapper empty() {
+        return new GrievanceWrapper(List.of());
+    }
 }

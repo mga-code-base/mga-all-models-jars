@@ -1,82 +1,65 @@
 package com.mygym.app.models;
 
-import java.util.List;
+import java.io.Serial;
+import java.io.Serializable;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "admins")
-public class Admin {
-	
-	@Id
-	@MongoId(targetType = FieldType.OBJECT_ID)
-	private ObjectId _id;
+public record Admin(
+        @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
+        String adminId,
+        String name,
+        String username,
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) String password,
+        String mobileNumber,
+        String emailAddress,
+        Boolean isActive,
+        @JsonProperty("branch") String branchId) implements Serializable {
 
-    private String adminId;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private String name;
-
-    private String username;
-
-    private String password;
-
-    private String mobileNumber;
-
-    private String emailAddress;
-
-    private Boolean isActive = false;
-    
-    private String branchId;
-
-    public Admin() {}
-    public Admin(String adminId, String username, String password, String mobileNumber, String emailAddress) {
-        this.adminId = adminId;
-        this.username = username;
-        this.password = password;
-        this.mobileNumber = mobileNumber;
-        this.emailAddress = emailAddress;
+    @PersistenceCreator
+    @JsonCreator
+    public Admin {
+        isActive = isActive != null ? isActive : Boolean.FALSE;
     }
-    public Admin(String adminId, String name, String username, String password, String mobileNumber, String emailAddress, List<Member> potentialMembers, Boolean isActive, String branchId) {
-        this.adminId = adminId;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.mobileNumber = mobileNumber;
-        this.emailAddress = emailAddress;
-        this.isActive = isActive;
-        this.branchId = branchId;
+
+    public static Admin notFound() {
+        return new Admin(null, "-1", null, null, null, null, null, null, null);
     }
-    public Admin(String invalidInt) {
-		this.adminId = invalidInt;
-	}
 
-	public ObjectId get_id() { return _id; }
-	public void set_id(ObjectId _id) { this._id = _id; }
+    public static Admin empty() {
+        return new Admin(null, null, null, null, null, null, null, null, null);
+    }
 
-    public String getAdminId() { return adminId; }
-    public void setAdminId(String adminId) { this.adminId = adminId; }
+    public static Admin primary(String username, String password) {
+        return new Admin(null, "0", null, username, password, "-1", "-1", null, null);
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Admin withIds(String adminId, String branchId) {
+        return new Admin(_id, adminId, name, username, password, mobileNumber, emailAddress, isActive, branchId);
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public Admin withPassword(String password) {
+        return new Admin(_id, adminId, name, username, password, mobileNumber, emailAddress, isActive, branchId);
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public Admin withIsActive(Boolean isActive) {
+        return new Admin(_id, adminId, name, username, password, mobileNumber, emailAddress, isActive, branchId);
+    }
 
-    public String getMobileNumber() { return mobileNumber; }
-    public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }
-
-    public String getEmailAddress() { return emailAddress; }
-    public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress; }
-
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
-
-	public String getBranch() {	return branchId; }
-	public void setBranch(String branchId) { this.branchId = branchId;	}
+    public Admin withProfileFrom(Admin source, String password) {
+        return new Admin(_id, adminId, source.name(), source.username(), password, source.mobileNumber(),
+                source.emailAddress(), source.isActive(), branchId);
+    }
 }
