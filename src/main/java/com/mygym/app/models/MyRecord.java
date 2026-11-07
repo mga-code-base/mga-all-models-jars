@@ -1,6 +1,5 @@
 package com.mygym.app.models;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,9 +17,6 @@ public record MyRecord(
         String targetMuscle,
         List<WorkoutSet> sets,
         String date) implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     public MyRecord withMemberId(String memberId) {
         return new MyRecord(_id, memberId, exerciseName, targetMuscle, sets, date);

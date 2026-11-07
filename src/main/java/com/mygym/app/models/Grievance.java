@@ -1,6 +1,5 @@
 package com.mygym.app.models;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import org.bson.types.ObjectId;
@@ -21,9 +20,6 @@ public record Grievance(
         String description,
         String resolution,
         String closureDate) implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     public static Grievance notFound() {
         return new Grievance(null, "-1", null, null, null, null, null, null, null, null);

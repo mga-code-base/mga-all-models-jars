@@ -1,6 +1,5 @@
 package com.mygym.app.models;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import org.springframework.data.annotation.PersistenceCreator;
@@ -13,9 +12,6 @@ public record Equipment(
         String targetMuscle,
         Boolean isInWorkingCondition,
         Failure failure) implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @PersistenceCreator
     @JsonCreator

@@ -1,6 +1,5 @@
 package com.mygym.app.models;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,9 +23,6 @@ public record Branch(
         String city,
         List<Equipment> equipments,
         Boolean isActive) implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @PersistenceCreator
     @JsonCreator

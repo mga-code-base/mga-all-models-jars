@@ -1,6 +1,5 @@
 package com.mygym.app.models;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import org.bson.types.ObjectId;
@@ -24,9 +23,6 @@ public record Admin(
         String emailAddress,
         Boolean isActive,
         @JsonProperty("branch") String branchId) implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @PersistenceCreator
     @JsonCreator
