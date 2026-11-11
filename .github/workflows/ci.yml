@@ -20,7 +20,7 @@ jobs:
           java-version: '21'
           cache: maven
       - name: Build
-        run: ./mvnw -B verify
+        run: mvn -B verify
 
   jitpack:
     runs-on: ubuntu-latest
