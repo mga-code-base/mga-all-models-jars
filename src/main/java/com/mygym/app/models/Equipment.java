@@ -2,13 +2,18 @@ package com.mygym.app.models;
 
 import java.io.Serializable;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+
 import org.springframework.data.annotation.PersistenceCreator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.mygym.app.validation.OnCreate;
 
 public record Equipment(
-        Integer equipmentId,
-        String name,
+        @PositiveOrZero Integer equipmentId,
+        @NotBlank(groups = OnCreate.class) @Size(max = 100) String name,
         String targetMuscle,
         Boolean isInWorkingCondition,
         Failure failure) implements Serializable {

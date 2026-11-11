@@ -3,9 +3,12 @@ package com.mygym.app.models;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public record WorkoutSet(
-        Float weight,
+        @PositiveOrZero Float weight,
         String scaleType,
-        Integer reps,
-        List<WorkoutSet> subsets) implements Serializable {
+        @PositiveOrZero Integer reps,
+        List<@Valid WorkoutSet> subsets) implements Serializable {
 }

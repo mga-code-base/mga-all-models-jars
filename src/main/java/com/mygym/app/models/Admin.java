@@ -2,25 +2,32 @@ package com.mygym.app.models;
 
 import java.io.Serializable;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mygym.app.validation.OnCreate;
 
 @Document(collection = "admins")
 public record Admin(
         @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
-        String adminId,
-        String name,
-        String username,
-        String password,
-        String mobileNumber,
-        String emailAddress,
+        @Indexed(unique = true, sparse = true) String adminId,
+        @NotBlank(groups = OnCreate.class) @Size(max = 100) String name,
+        @Indexed(unique = true, sparse = true) @NotBlank(groups = OnCreate.class) @Size(max = 64) String username,
+        @NotBlank(groups = OnCreate.class) @Size(min = 8, max = 72, groups = OnCreate.class) String password,
+        @Pattern(regexp = "^(-1|\\+?[0-9 ]{7,15})$") String mobileNumber,
+        @Email @Size(max = 254) String emailAddress,
         Boolean isActive,
         @JsonProperty("branch") String branchId) implements Serializable {
 

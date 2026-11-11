@@ -3,25 +3,32 @@ package com.mygym.app.models;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.mygym.app.validation.OnCreate;
 
 @Document(collection = "branches")
 public record Branch(
         @Id @MongoId(targetType = FieldType.OBJECT_ID) ObjectId _id,
-        String branchId,
-        String name,
-        List<String> adminIds,
-        Integer pincode,
-        String address,
-        String city,
-        List<Equipment> equipments,
+        @Indexed(unique = true, sparse = true) String branchId,
+        @NotBlank(groups = OnCreate.class) @Size(max = 100) String name,
+        @Indexed(sparse = true) List<String> adminIds,
+        @Positive Integer pincode,
+        @Size(max = 300) String address,
+        @Size(max = 100) String city,
+        List<@Valid Equipment> equipments,
         Boolean isActive) implements Serializable {
 
     @PersistenceCreator

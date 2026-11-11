@@ -1,3 +1,8 @@
 package com.mygym.app.dto;
 
-public record LoginRequest(String username, String password) implements java.io.Serializable {}
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record LoginRequest(
+        @NotBlank @Size(max = 64) String username,
+        @NotBlank @Size(max = 72) String password) implements java.io.Serializable {}
