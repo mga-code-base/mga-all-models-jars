@@ -27,9 +27,10 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     steps:
-      - name: Ask JitPack to build this branch
+      - name: Ask JitPack to build this commit and branch
         run: |
-          url="https://jitpack.io/com/github/${{ github.repository }}/${{ github.ref_name }}-SNAPSHOT"
-          curl -sS -m 600 -I "$url/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
-          curl -sSL -m 600 -o /dev/null -w "pom status after redirects %{http_code}\n" "$url/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
-          curl -sSL -m 120 "$url/build.log" | tail -80
+          base="https://jitpack.io/com/github/${{ github.repository }}"
+          commit="${GITHUB_SHA::10}"
+          curl -sSL -m 900 -o /dev/null -w "commit pom status %{http_code}\n" "$base/$commit/mga-all-models-jars-$commit.pom" || true
+          curl -sSL -m 120 "$base/$commit/build.log" | tail -40
+          curl -sSL -m 600 -o /dev/null -w "branch pom status %{http_code}\n" "$base/${{ github.ref_name }}-SNAPSHOT/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
