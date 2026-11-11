@@ -30,5 +30,6 @@ jobs:
       - name: Ask JitPack to build this branch
         run: |
           url="https://jitpack.io/com/github/${{ github.repository }}/${{ github.ref_name }}-SNAPSHOT"
-          curl -sS -m 600 -o /dev/null -w "pom status %{http_code}\n" "$url/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
-          curl -sS -m 120 "$url/build.log" | tail -60
+          curl -sS -m 600 -I "$url/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
+          curl -sSL -m 600 -o /dev/null -w "pom status after redirects %{http_code}\n" "$url/mga-all-models-jars-${{ github.ref_name }}-SNAPSHOT.pom" || true
+          curl -sSL -m 120 "$url/build.log" | tail -80
